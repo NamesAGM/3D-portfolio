@@ -3,8 +3,25 @@ import Button from '../components/Button'
 import Spline from '@splinetool/react-spline'
 import { useGSAP} from '@gsap/react';
 import gsap from 'gsap';
+import { useState, useEffect } from 'react';
 
 const Hero = ({ setCurrentSection }) => {
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        // Check if device is mobile based on screen width
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 768);
+        };
+        
+        // Initial check
+        checkMobile();
+        
+        // Listen for window resize
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
     useGSAP(() => {
         gsap.fromTo('.hero-text h1',
             {
@@ -75,7 +92,9 @@ const Hero = ({ setCurrentSection }) => {
             </header>
             {/*RIGHT: 3D MODEL */}
             <div className="hero-3d-layout">
-                <Spline scene="https://prod.spline.design/yjBMOTJem7zwpiRy/scene.splinecode" />
+                {!isMobile && (
+                    <Spline scene="https://prod.spline.design/yjBMOTJem7zwpiRy/scene.splinecode" />
+                )}
             </div>
         </div>
     </section> 
